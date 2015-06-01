@@ -81,16 +81,80 @@ class Team(object):
 		if (self.slot5):
 			count = count+1
 		return count
+	
+	def add_player(self,player):
+		if (self.slot1):
+			if (self.slot2):
+				if (self.slot3):
+					if (self.slot4):
+						if (self.slot5):
+							return false
+						else:
+							self.slot5 = player
+					else:
+						self.slot4 = player
+				else:
+					self.slot3 = player
+			else:
+				self.slot2 = player
+		else:
+			self.slot1 = player
+			
+	def __repr__(self):
+		return "Team()"
 
+	def __str__(self):
+		print ("------------------------------------------------------")
+		print (self.name)
+		print (self.slot1)
+		print (self.slot2)
+		print (self.slot3)
+		print (self.slot4)
+		print (self.slot5)
+		print ("ELO Average: " + self.get_average_elo())
+		print ("------------------------------------------------------")
+		
 def create_teams(players):
-
+	local_list = players
+	team_list = []
+	if(len(local_list)%5 != 0):
+		print("unable to make full teams")
+		return
+	number_of_teams = len(local_list)/5
+	team_names= ["Islington","Dixon","Kipling","Islington2","Dixon2","Kipling2",
+				"Islington3","Dixon3","Kipling3","Islington4","Dixon4","Kipling4",
+				"Islington5","Dixon5","Kipling5","Islington6","Dixon6","Kipling6"
+				,"Islington7","Dixon7","Kipling7","Islington8","Dixon8","Kipling8",
+				"Islington9","Dixon9","Kipling9","Islington10","Dixon10","Kipling10"]
+	top = 1
+	for x in (0,number_of_teams):
+		newTeam = Team(team_names.pop())
+		inspect_player = local_list[0]
+		while (newTeam.member_count() != 5):
+			if(inspect_player.duo):
+				if (newTeam.member_count() < 2 ):
+					top = top * -1
+					pass
+				else:
+					newTeam.add_player(inspect_player)
+					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.lower()]
+					duo = duo[0]
+					newTeam.add_player(duo)
+					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
+					local_list=[x for x in local_list if x.ign.lower() != duo.ign.lower()]
+			else:
+				newTeam.add_player(inspect_player)
+				local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
+				
+		team_list.append(newTeam)
+		print (newTeam)
 
 
 		
 # creating the list of participants with duos tied to them
 directory = "sql2.csv"
 participants = []
-with open(directory,'rb') as f:
+with open(directory) as f:
 	reader = csv.reader(f)
 	for row in reader:
 	    name = row[0]
@@ -105,7 +169,7 @@ with open(directory,'rb') as f:
 	    newplayer = Player(name,ign,email,rank,elo,duo)
 	    participants.append(newplayer)
 
-participants.sort(key=lambda x: x.elo, reverse=False)
+participants.sort(key=lambda x: int(x.elo), reverse=False)
 
 for attendee in participants:
 	if (attendee.duo):
@@ -115,6 +179,6 @@ for attendee in participants:
 		else:
 			attendee.add_duo(None)
 
-for attendee in participants:
-	print attendee
-print len(participants)
+create_teams(participants)
+
+
