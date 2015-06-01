@@ -49,19 +49,19 @@ class Team(object):
 		total=0
 		count=0
 		if (self.slot1):
-			total = total+slot1.elo
+			total = total+int(self.slot1.elo)
 			count = count+1
 		if (self.slot2):
-			total = total+slot2.elo
+			total = total+int(self.slot2.elo)
 			count = count+1
 		if (self.slot3):
-			total = total+slot3.elo
+			total = total+int(self.slot3.elo)
 			count = count+1
 		if (self.slot4):
-			total = total+slot4.elo
+			total = total+int(self.slot4.elo)
 			count = count+1
 		if (self.slot5):
-			total = total+slot5.elo
+			total = total+int(self.slot5.elo)
 			count = count+1
 
 		average = total/count
@@ -111,7 +111,7 @@ class Team(object):
 		print (self.slot3)
 		print (self.slot4)
 		print (self.slot5)
-		print ("ELO Average: " + self.get_average_elo())
+		print ("ELO Average: " + str(self.get_average_elo()))
 		print ("------------------------------------------------------")
 		
 def create_teams(players):
@@ -129,8 +129,8 @@ def create_teams(players):
 	top = 1
 	for x in (0,number_of_teams):
 		newTeam = Team(team_names.pop())
-		inspect_player = local_list[0]
 		while (newTeam.member_count() != 5):
+			inspect_player = local_list[0]
 			if(inspect_player.duo):
 				if (newTeam.member_count() < 2 ):
 					top = top * -1
