@@ -62,7 +62,7 @@ class Team(object):
 			count = count+1
 		if (self.slot5):
 			total = total+int(self.slot5.elo)
-			count = count+1
+			count = count+1	
 
 		average = total/count
 
@@ -130,10 +130,20 @@ def create_teams(players):
 	for x in (0,number_of_teams):
 		newTeam = Team(team_names.pop())
 		while (newTeam.member_count() != 5):
-			inspect_player = local_list[0]
+			if (top == 1):
+				index = 0
+			else:
+				index = -1
+			inspect_player = local_list[index]
+			print(inspect_player)
 			if(inspect_player.duo):
 				if (newTeam.member_count() < 2 ):
-					top = top * -1
+					if (top ==1):
+						index = index + 1
+						inspect_player = local_list[index]
+					else:
+						index = index - 1
+						inspect_player = local_list[index]
 					pass
 				else:
 					newTeam.add_player(inspect_player)
@@ -142,9 +152,12 @@ def create_teams(players):
 					newTeam.add_player(duo)
 					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
 					local_list=[x for x in local_list if x.ign.lower() != duo.ign.lower()]
+					top = top * -1
 			else:
 				newTeam.add_player(inspect_player)
-				local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
+				local_list=[x for 
+				x in local_list if x.ign.lower() != inspect_player.ign.lower()]
+				top = top * -1
 				
 		team_list.append(newTeam)
 		print (newTeam)
