@@ -88,7 +88,7 @@ class Team(object):
 				if (self.slot3):
 					if (self.slot4):
 						if (self.slot5):
-							return false
+							return False
 						else:
 							self.slot5 = player
 					else:
@@ -112,7 +112,7 @@ class Team(object):
 		print (self.slot4)
 		print (self.slot5)
 		print ("ELO Average: " + str(self.get_average_elo()))
-		print ("------------------------------------------------------")
+		return "------------------------------------------------------"
 		
 def create_teams(players):
 	local_list = players
@@ -127,7 +127,8 @@ def create_teams(players):
 				,"Islington7","Dixon7","Kipling7","Islington8","Dixon8","Kipling8",
 				"Islington9","Dixon9","Kipling9","Islington10","Dixon10","Kipling10"]
 	top = 1
-	for x in (0,number_of_teams):
+	for z in range(0,number_of_teams):
+		print z
 		newTeam = Team(team_names.pop())
 		while (newTeam.member_count() != 5):
 			if (top == 1):
@@ -135,9 +136,9 @@ def create_teams(players):
 			else:
 				index = -1
 			inspect_player = local_list[index]
-			print(inspect_player)
+			# print(inspect_player)
 			if(inspect_player.duo):
-				if (newTeam.member_count() < 2 ):
+				if (newTeam.member_count() > 4 ):
 					if (top ==1):
 						index = index + 1
 						inspect_player = local_list[index]
@@ -147,7 +148,7 @@ def create_teams(players):
 					pass
 				else:
 					newTeam.add_player(inspect_player)
-					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.lower()]
+					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.ign.lower()]
 					duo = duo[0]
 					newTeam.add_player(duo)
 					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
