@@ -128,7 +128,6 @@ def create_teams(players):
 				"Islington9","Dixon9","Kipling9","Islington10","Dixon10","Kipling10"]
 	top = 1
 	for z in range(0,number_of_teams):
-		print z
 		newTeam = Team(team_names.pop())
 		while (newTeam.member_count() != 5):
 			if (top == 1):
