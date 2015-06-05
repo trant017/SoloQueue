@@ -113,6 +113,11 @@ class Team(object):
 		print (self.slot5)
 		print ("ELO Average: " + str(self.get_average_elo()))
 		return "------------------------------------------------------"
+
+def printPlayer(player):
+	with open('dromosV2.csv', 'a') as fp:
+		fp.write(player.__str__())
+
 		
 def create_teams(players):
 	local_list = players
@@ -127,41 +132,49 @@ def create_teams(players):
 				,"Islington7","Dixon7","Kipling7","Islington8","Dixon8","Kipling8",
 				"Islington9","Dixon9","Kipling9","Islington10","Dixon10","Kipling10"]
 	top = 1
+	no_room = False
 	for z in range(0,int(number_of_teams)):
 		newTeam = Team(team_names.pop())
 		while (newTeam.member_count() != 5):
-			if (top == 1):
-				index = 0
-			else:
-				index = -1
+			if (no_room == False):
+				if (top == 1):
+					index = 0
+				else:
+					index = -1
 			inspect_player = local_list[index]
-			print (len(local_list))
 # 			print(inspect_player)
 			if(inspect_player.duo):
-				if (newTeam.member_count() > 4 ):
+				if (newTeam.member_count() > 3 ):
 					if (top ==1):
 						index = index + 1
-						inspect_player = local_list[index]
+						no_room = True
 					else:
 						index = index - 1
-						inspect_player = local_list[index]
-					pass
+						no_room = True
 				else:
 					newTeam.add_player(inspect_player)
+					printPlayer(inspect_player)
 					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.ign.lower()]
 					duo = duo[0]
 					newTeam.add_player(duo)
+					printPlayer(duo)
+					no_room = False
 					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
 					local_list=[x for x in local_list if x.ign.lower() != duo.ign.lower()]
 					top = top * -1
 			else:
 				newTeam.add_player(inspect_player)
+				printPlayer(inspect_player)
+				no_room = False
 				local_list=[x for 
 				x in local_list if x.ign.lower() != inspect_player.ign.lower()]
 				top = top * -1
 				
 		team_list.append(newTeam)
 		print (newTeam)
+	return team_list
+
+def stage2_teambalance(team_list):
 
 
 		
@@ -193,6 +206,5 @@ for attendee in participants:
 		else:
 			attendee.add_duo(None)
 
-create_teams(participants)
-
-
+team_list = create_teams(participants)
+print (len(team_list))
