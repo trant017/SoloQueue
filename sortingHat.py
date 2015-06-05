@@ -127,7 +127,7 @@ def create_teams(players):
 				,"Islington7","Dixon7","Kipling7","Islington8","Dixon8","Kipling8",
 				"Islington9","Dixon9","Kipling9","Islington10","Dixon10","Kipling10"]
 	top = 1
-	for z in range(0,number_of_teams):
+	for z in range(0,int(number_of_teams)):
 		newTeam = Team(team_names.pop())
 		while (newTeam.member_count() != 5):
 			if (top == 1):
@@ -135,7 +135,8 @@ def create_teams(players):
 			else:
 				index = -1
 			inspect_player = local_list[index]
-			# print(inspect_player)
+			print (len(local_list))
+# 			print(inspect_player)
 			if(inspect_player.duo):
 				if (newTeam.member_count() > 4 ):
 					if (top ==1):
