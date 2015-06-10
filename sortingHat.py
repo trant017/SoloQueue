@@ -171,11 +171,19 @@ def create_teams(players):
 				top = top * -1
 				
 		team_list.append(newTeam)
-		print (newTeam)
 	return team_list
 
-def stage2_teambalance(team_list):
+def balance(top_team,bottom_team):
+	
+	
 
+def stage2_teambalance(team_list):
+	improved_team_list = []
+	local_list = team_list
+	local_list.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+	top_team = local_list[-1]
+	bottom_team = local_list[0]
+	balance(top_team, bottom_team)
 
 		
 # creating the list of participants with duos tied to them
@@ -207,4 +215,4 @@ for attendee in participants:
 			attendee.add_duo(None)
 
 team_list = create_teams(participants)
-print (len(team_list))
+stage2_teambalance(team_list)
