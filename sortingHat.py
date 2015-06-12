@@ -36,7 +36,7 @@ class Player(object):
 class Block(object):
 	#The team
 	def __init__(self):
-		self.name = None
+		self.name = ''
 		self.slot1 = None
 		self.slot2 = None
 
@@ -67,8 +67,10 @@ class Block(object):
 			if (self.slot2):
 				return False		
 			else:
+				self.name = self.name + '/' + player.ign 
 				self.slot2 = player
 		else:
+			self.name = self.name + player.ign
 			self.slot1 = player
 
 			
@@ -151,61 +153,61 @@ class Team(object):
 	def blockify(self):
 		blocks = []
 		count =0
-		if (slot1.duo):
+		if (self.slot1.duo):
 			newBlock = Block()
-			newBlock.add_player(slot1)
-			newBLock.add_player(slot2)
+			newBlock.add_player(self.slot1)
+			newBlock.add_player(self.slot2)
 			blocks.append(newBlock)
 			count = count + 2
 		else:
 			newBlock = Block()
-			newBlock = add_player(slot1)
+			newBlock.add_player(self.slot1)
 			count = count + 1
 
-		if (slot2.duo):
+		if (self.slot2.duo):
 			if (count == 2):
-				continue
+				doNothing=True
 			else:
 				newBlock = Block()
-				newBlock.add_player(slot2)
-				newBlock.add_player(slot3)
+				newBlock.add_player(self.slot2)
+				newBlock.add_player(self.slot3)
 				count = count + 2
 		else:
 			newBlock = Block()
-			newBlock = add_player(slot2)
+			newBlock.add_player(self.slot2)
 			count = count + 1
 
-		if (slot3.duo):
+		if (self.slot3.duo):
 			if (count==2):
 				newBlock = Block()
-				newBlock = add_player(slot3)
-				newBlock = add_player(slot4)
+				newBlock.add_player(self.slot3)
+				newBlock.add_player(self.slot4)
 				count = count + 2
 			else:
-				continue
+				doNothing=True
 
 		else:
 			newBlock = Block()
-			newBlock = add_player(slot3)
+			newBlock.add_player(self.slot3)
 			count = count + 1
 
-		if (slot4.duo):
+		if (self.slot4.duo):
 			if (count==3):
 				newBlock = Block()
-				newBlock = add_player(slot4)
-				newBlock = add_player(slot5)
+				newBlock.add_player(self.slot4)
+				newBlock.add_player(self.slot5)
 				count = count + 2
 			else:
-				continue
+				doNothing=True
 
 		else:
 			newBlock = Block()
-			newBlock = add_player(slot4)
+			newBlock.add_player(self.slot4)
 			count = count + 1
 		
 		if (count!=5):
 			newBlock = Block()
-			newBlock = add_player(slot5)
+			newBlock.add_player(self.slot5)
 			count = count + 1
 		return blocks
 			
@@ -283,14 +285,14 @@ def create_teams(players):
 	return team_list
 
 def balance(top_team,bottom_team):
-	difference = top_team.get_average_elo - bottom_team.get_average_elo
-	if (difference > 150){
+	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
+	if (difference > 150) :
 		top_Block = top_team.blockify();
 		bottom_Block = bottom_team.blockify();
-	for (block in top_Block):
+	for block in top_Block:
 		print (block)
-	for (block2 in bottom_Block):
-		print (block)
+	for block2 in bottom_Block:
+		print (block2)
 	
 
 
