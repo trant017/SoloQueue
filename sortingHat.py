@@ -152,7 +152,7 @@ class Team(object):
 
 	def blockify(self):
 		blocks = []
-		count =0
+		count = 0
 		if (self.slot1.duo):
 			newBlock = Block()
 			newBlock.add_player(self.slot1)
@@ -162,8 +162,8 @@ class Team(object):
 		else:
 			newBlock = Block()
 			newBlock.add_player(self.slot1)
+			blocks.append(newBlock)
 			count = count + 1
-
 		if (self.slot2.duo):
 			if (count == 2):
 				doNothing=True
@@ -171,17 +171,19 @@ class Team(object):
 				newBlock = Block()
 				newBlock.add_player(self.slot2)
 				newBlock.add_player(self.slot3)
+				blocks.append(newBlock)
 				count = count + 2
 		else:
 			newBlock = Block()
 			newBlock.add_player(self.slot2)
+			blocks.append(newBlock)
 			count = count + 1
-
 		if (self.slot3.duo):
 			if (count==2):
 				newBlock = Block()
 				newBlock.add_player(self.slot3)
 				newBlock.add_player(self.slot4)
+				blocks.append(newBlock)
 				count = count + 2
 			else:
 				doNothing=True
@@ -189,13 +191,14 @@ class Team(object):
 		else:
 			newBlock = Block()
 			newBlock.add_player(self.slot3)
+			blocks.append(newBlock)
 			count = count + 1
-
 		if (self.slot4.duo):
 			if (count==3):
 				newBlock = Block()
 				newBlock.add_player(self.slot4)
 				newBlock.add_player(self.slot5)
+				blocks.append(newBlock)
 				count = count + 2
 			else:
 				doNothing=True
@@ -203,12 +206,14 @@ class Team(object):
 		else:
 			newBlock = Block()
 			newBlock.add_player(self.slot4)
+			blocks.append(newBlock)
 			count = count + 1
-		
 		if (count!=5):
 			newBlock = Block()
 			newBlock.add_player(self.slot5)
+			blocks.append(newBlock)
 			count = count + 1
+
 		return blocks
 			
 	def __repr__(self):
@@ -289,8 +294,10 @@ def balance(top_team,bottom_team):
 	if (difference > 150) :
 		top_Block = top_team.blockify();
 		bottom_Block = bottom_team.blockify();
+	print (top_team)
 	for block in top_Block:
 		print (block)
+	print (bottom_team)
 	for block2 in bottom_Block:
 		print (block2)
 	
