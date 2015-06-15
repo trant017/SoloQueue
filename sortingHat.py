@@ -292,24 +292,22 @@ def balance_algorithm_1(top_team,bottom_team):
 	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
 	top_Block = top_team.blockify()
 	bottom_Block = bottom_team.blockify()	
-	mixing_pot = top_Block + bottom_Block+
+	mixing_pot = top_Block + bottom_Block
 	mixing_pot.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
-	team1 = Team()
-	team1.name = top_team.name
-	team2 = Team()
-	team2.name = bottom_team.name
+	team1 = Team(top_team.name)
+	team2 = Team(bottom_team.name)
 	stage = 0
-	while(mixing_pot[0]):
+	while(len(mixing_pot)>0):
 		inspect_block = mixing_pot.pop()
 		if (stage == 0):
-			if (inspect_element.member_count == 2):
+			if (inspect_block.member_count() == 2):
 				team1.add_player(inspect_block.slot1)
 				team1.add_player(inspect_block.slot2)
 			else:
 				team1.add_player(inspect_block.slot1)
 			stage = -2
 		elif (stage == -3):
-			if (inspect_block.member_count == 2):
+			if (inspect_block.member_count() == 2):
 				team2.add_player(inspect_block.slot1)
 				team2.add_player(inspect_block.slot2)
 				stage = -1
@@ -317,7 +315,7 @@ def balance_algorithm_1(top_team,bottom_team):
 				team2.add_player(inspect_block.slot1)
 				stage = -2
 		elif (stage == -2 ):
-			if (inspect_block.member_count == 2):
+			if (inspect_block.member_count() == 2):
 				team2.add_player(inspect_block.slot1)
 				team2.add_player(inspect_block.slot2)
 				stage = 2
@@ -325,7 +323,7 @@ def balance_algorithm_1(top_team,bottom_team):
 				team2.add_player(inspect_block.slot1)
 				stage = -1
 		elif (stage == -1):
-			if (inspect_block.member_count ==2):
+			if (inspect_block.member_count() == 2):
 				team2.add_player(inspect_block.slot1)
 				team2.add_player(inspect_block.slot2)
 				stage = 3
@@ -333,38 +331,34 @@ def balance_algorithm_1(top_team,bottom_team):
 				team2.add_player(inspect_block.slot1)
 				stage = 2
 		elif (stage == 3):
-			if (inspect_block.member_count == 2):
-				team2.add_player(inspect_block.slot1)
-				team2.add_player(inspect_block.slot2)
+			if (inspect_block.member_count() == 2):
+				team1.add_player(inspect_block.slot1)
+				team1.add_player(inspect_block.slot2)
 				stage = 1
 			else:
-				team2.add_player(inspect_block.slot1)
+				team1.add_player(inspect_block.slot1)
 				stage = 2
 		elif (stage == 2):
-			if (inspect_block.member_count == 2):
-				team2.add_player(inspect_block.slot1)
-				team2.add_player(inspect_block.slot2)
+			if (inspect_block.member_count() == 2):
+				team1.add_player(inspect_block.slot1)
+				team1.add_player(inspect_block.slot2)
 				stage = -2
 			else:
-				team2.add_player(inspect_block.slot1)
+				team1.add_player(inspect_block.slot1)
 				stage = 1
 		elif (stage == 1):
-			if (inspect_block.member_count ==2):
-				team2.add_player(inspect_block.slot1)
-				team2.add_player(inspect_block.slot2)
+			if (inspect_block.member_count() ==2):
+				team1.add_player(inspect_block.slot1)
+				team1.add_player(inspect_block.slot2)
 				stage = -3
 			else:
-				team2.add_player(inspect_block.slot1)
+				team1.add_player(inspect_block.slot1)
 				stage = -2
 		else:
 			print("could not handle team creation")
 			print(inspect_block)
 			break
 	return [team1.get_average_elo()-team2.get_average_elo(),team1,team2]
-
-
-
-
 
 	print (top_team)
 	for block in top_Block:
@@ -373,16 +367,16 @@ def balance_algorithm_1(top_team,bottom_team):
 	for block2 in bottom_Block:
 		print (block2)
 
-def balance_algorithm_2(top_team,bottom_team):
-	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-	top_Block = top_team.blockify();
-	bottom_Block = bottom_team.blockify();
-	print (top_team)
-	for block in top_Block:
-		print (block)
-	print (bottom_team)
-	for block2 in bottom_Block:
-		print (block2)		
+# def balance_algorithm_2(top_team,bottom_team):
+# 	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
+# 	top_Block = top_team.blockify();
+# 	bottom_Block = bottom_team.blockify();
+# 	print (top_team)
+# 	for block in top_Block:
+# 		print (block)
+# 	print (bottom_team)
+# 	for block2 in bottom_Block:
+# 		print (block2)		
 	
 
 
@@ -400,8 +394,12 @@ def stage2_teambalance(team_list):
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
 		if (difference > 150) :
 			score1 = balance_algorithm_1(top_team, bottom_team)
-			score2 = balance_algorithm_2(top_team, bottom_team)
+			# score2 = balance_algorithm_2(top_team, bottom_team)
+			print(score1[0])
+			print(score1[1])
+			print(score1[2])
 			count = count + 1
+			flag=False
 		else:
 			count = count + 1
 			if count > 1000:
@@ -437,4 +435,4 @@ for attendee in participants:
 			attendee.add_duo(None)
 
 team_list = create_teams(participants)
-# stage2_teambalance(team_list)
+stage2_teambalance(team_list)
