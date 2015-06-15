@@ -9,7 +9,6 @@ import csv
 
 class Player(object):
 	# A player that has registered for the tournament
-
 	def __init__(self,name,ign,email,rank,elo,duo):
 		self.name = name
 		self.ign = ign
@@ -289,27 +288,53 @@ def create_teams(players):
 		team_list.append(newTeam)
 	return team_list
 
-def balance(top_team,bottom_team):
+def balance_algorithm_1(top_team,bottom_team):
 	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-	if (difference > 150) :
-		top_Block = top_team.blockify();
-		bottom_Block = bottom_team.blockify();
+	top_Block = top_team.blockify()
+	bottom_Block = bottom_team.blockify()
+	mixing_pot = top_Block + bottom_Block
+	mixing_pot.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
 	print (top_team)
 	for block in top_Block:
 		print (block)
 	print (bottom_team)
 	for block2 in bottom_Block:
 		print (block2)
+
+def balance_algorithm_2(top_team,bottom_team):
+	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
+	top_Block = top_team.blockify();
+	bottom_Block = bottom_team.blockify();
+	print (top_team)
+	for block in top_Block:
+		print (block)
+	print (bottom_team)
+	for block2 in bottom_Block:
+		print (block2)		
 	
 
 
 def stage2_teambalance(team_list):
 	improved_team_list = []
 	local_list = team_list
-	local_list.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
-	top_team = local_list[-1]
-	bottom_team = local_list[0]
-	balance(top_team, bottom_team)
+	flag = True
+	count = 0
+	while(flag):
+		local_list.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+		top_team = local_list[-1]
+		bottom_team = local_list[0]
+		[x for x in local_list if x.name.lower() != top_team.name.lower()]
+		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
+		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
+		if (difference > 150) :
+			score1 = balance_algorithm_1(top_team, bottom_team)
+			score2 = balance_algorithm_2(top_team, bottom_team)
+			count = count + 1
+		else
+			count = count + 1
+			if count > 1000:
+				flag=False
+			continue
 
 		
 # creating the list of participants with duos tied to them
