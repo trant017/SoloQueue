@@ -297,15 +297,17 @@ def balance_algorithm_1(top_team,bottom_team):
 	team1 = Team(top_team.name)
 	team2 = Team(bottom_team.name)
 	stage = 0
+	# import pdb; pdb.set_trace()
 	while(len(mixing_pot)>0):
 		inspect_block = mixing_pot.pop()
 		if (stage == 0):
 			if (inspect_block.member_count() == 2):
 				team1.add_player(inspect_block.slot1)
 				team1.add_player(inspect_block.slot2)
+				stage = -3
 			else:
 				team1.add_player(inspect_block.slot1)
-			stage = -2
+				stage = -2
 		elif (stage == -3):
 			if (inspect_block.member_count() == 2):
 				team2.add_player(inspect_block.slot1)
@@ -392,7 +394,7 @@ def stage2_teambalance(team_list):
 		[x for x in local_list if x.name.lower() != top_team.name.lower()]
 		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-		if (difference > 250) :
+		if (difference > 100) :
 			score1 = balance_algorithm_1(top_team, bottom_team)
 			# score2 = balance_algorithm_2(top_team, bottom_team)
 
@@ -409,6 +411,7 @@ def stage2_teambalance(team_list):
 			if count > 1000:
 				flag=False
 			continue
+	print (count)
 
 		
 # creating the list of participants with duos tied to them
