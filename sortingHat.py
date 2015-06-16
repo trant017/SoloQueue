@@ -392,14 +392,18 @@ def stage2_teambalance(team_list):
 		[x for x in local_list if x.name.lower() != top_team.name.lower()]
 		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-		if (difference > 150) :
+		if (difference > 250) :
 			score1 = balance_algorithm_1(top_team, bottom_team)
 			# score2 = balance_algorithm_2(top_team, bottom_team)
+
+			local_list=[x for x in local_list if x.name.lower() != top_team.name.lower()]
+			local_list=[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
+			local_list.append(score1[1])
+			local_list.append(score1[2])
 			print(score1[0])
 			print(score1[1])
 			print(score1[2])
 			count = count + 1
-			flag=False
 		else:
 			count = count + 1
 			if count > 1000:
