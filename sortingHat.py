@@ -368,17 +368,6 @@ def balance_algorithm_1(top_team,bottom_team):
 	print (bottom_team)
 	for block2 in bottom_Block:
 		print (block2)
-
-# def balance_algorithm_2(top_team,bottom_team):
-# 	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-# 	top_Block = top_team.blockify();
-# 	bottom_Block = bottom_team.blockify();
-# 	print (top_team)
-# 	for block in top_Block:
-# 		print (block)
-# 	print (bottom_team)
-# 	for block2 in bottom_Block:
-# 		print (block2)		
 	
 
 
@@ -396,15 +385,10 @@ def stage2_teambalance(team_list):
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
 		if (difference > 100) :
 			score1 = balance_algorithm_1(top_team, bottom_team)
-			# score2 = balance_algorithm_2(top_team, bottom_team)
-
 			local_list=[x for x in local_list if x.name.lower() != top_team.name.lower()]
 			local_list=[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 			local_list.append(score1[1])
 			local_list.append(score1[2])
-			print(score1[0])
-			print(score1[1])
-			print(score1[2])
 			count = count + 1
 		else:
 			count = count + 1
