@@ -50,7 +50,7 @@ class Block(object):
 			total = total+int(self.slot2.elo)
 			count = count+1
 
-		average = total
+		average = total/count
 
 		return average
 
@@ -290,7 +290,6 @@ def create_teams(players):
 	return team_list
 
 def balance_algorithm_1(top_team,bottom_team):
-	difference = top_team.get_average_elo() - bottom_team.get_average_elo()
 	top_Block = top_team.blockify()
 	bottom_Block = bottom_team.blockify()	
 	mixing_pot = top_Block + bottom_Block
@@ -369,7 +368,31 @@ def balance_algorithm_1(top_team,bottom_team):
 	print (bottom_team)
 	for block2 in bottom_Block:
 		print (block2)
-	
+
+def balance_algorithm_2(top_team,bottom_team):
+	top_Block = top_team.blockify()
+	bottom_Block = bottom_team.blockify()	
+	mixing_pot = top_Block + bottom_Block
+	mixing_pot.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+	team1 = Team(top_team.name)
+	team2 = Team(bottom_team.name)
+	while(team1.member_count() != 5):
+		inspect_block_top = mixing_pot.pop()
+		inspect_block_bottom = mixing_pot[0]
+		local_list=[x for x in local_list if x.name.lower() != inspect_block.name.lower()]
+		if((5-team1.member_count)>inspect_block_top.member_count()):
+			if (inspect_block_top.member_count==2):
+				team1.add_player(inspect_block_top.slot1)
+				team1.add_player(inspect_block_top.slot2)
+			else:
+				team1.add_player(inspect_block_top.slot1)
+		if((5-team1.member_count)>inspect_block_bottom.member_count()):
+			if (inspect_block_top.member_count==2):
+				team1.add_player(inspect_block_bottom.slot1)
+				team1.add_player(inspect_block_bottom.slot2)
+			else:
+				team1.add_player(inspect_block_bottom.slot1)
+
 
 
 def stage2_teambalance(team_list):
@@ -384,15 +407,15 @@ def stage2_teambalance(team_list):
 		[x for x in local_list if x.name.lower() != top_team.name.lower()]
 		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-		if (difference > 1000) :
+		if (difference > 300) :
 			score1 = balance_algorithm_1(top_team, bottom_team)
 			local_list=[x for x in local_list if x.name.lower() != top_team.name.lower()]
 			local_list=[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 			local_list.append(score1[1])
 			local_list.append(score1[2])
 			count = count + 1
-			print(score1[1])
-			print(score1[2])
+			# print(score1[1])
+			# print(score1[2])
 			if count > 1000:
 				flag=False
 		else:
@@ -435,13 +458,14 @@ team_list = stage2_teambalance(team_list)
 number_of_teams = len(team_list)
 sum = 0
 list_of_elo = []
-# for team in team_list:
-# 	print (team)
-# 	sum = sum + int(team.get_average_elo())
-# 	list_of_elo.append(int(team.get_average_elo()))
-# 	
-# avg = sum/number_of_teams
-# print ("Average:"+str(avg))
-# std = stdev(list_of_elo)
-# print ("STD:"+str(std))
+team_list.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+for team in team_list:
+	print (team)
+	sum = sum + int(team.get_average_elo())
+	list_of_elo.append(int(team.get_average_elo()))
+	
+avg = sum/number_of_teams
+print ("Average:"+str(avg))
+std = stdev(list_of_elo)
+print ("STD:"+str(std))
 
