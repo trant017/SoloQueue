@@ -5,6 +5,7 @@ import subprocess
 import gzip
 from distutils.spawn import find_executable
 import csv
+from statistics import stdev
 
 
 class Player(object):
@@ -49,7 +50,7 @@ class Block(object):
 			total = total+int(self.slot2.elo)
 			count = count+1
 
-		average = total/count
+		average = total
 
 		return average
 
@@ -113,7 +114,7 @@ class Team(object):
 			total = total+int(self.slot5.elo)
 			count = count+1	
 
-		average = total/count
+		average = total
 
 		return average
 
@@ -383,19 +384,23 @@ def stage2_teambalance(team_list):
 		[x for x in local_list if x.name.lower() != top_team.name.lower()]
 		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
-		if (difference > 100) :
+		if (difference > 1000) :
 			score1 = balance_algorithm_1(top_team, bottom_team)
 			local_list=[x for x in local_list if x.name.lower() != top_team.name.lower()]
 			local_list=[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 			local_list.append(score1[1])
 			local_list.append(score1[2])
 			count = count + 1
+			print(score1[1])
+			print(score1[2])
+			if count > 1000:
+				flag=False
 		else:
 			count = count + 1
 			if count > 1000:
 				flag=False
 			continue
-	print (count)
+	return local_list	
 
 		
 # creating the list of participants with duos tied to them
@@ -426,4 +431,17 @@ for attendee in participants:
 			attendee.add_duo(None)
 
 team_list = create_teams(participants)
-stage2_teambalance(team_list)
+team_list = stage2_teambalance(team_list)
+number_of_teams = len(team_list)
+sum = 0
+list_of_elo = []
+# for team in team_list:
+# 	print (team)
+# 	sum = sum + int(team.get_average_elo())
+# 	list_of_elo.append(int(team.get_average_elo()))
+# 	
+# avg = sum/number_of_teams
+# print ("Average:"+str(avg))
+# std = stdev(list_of_elo)
+# print ("STD:"+str(std))
+
