@@ -392,6 +392,14 @@ def balance_algorithm_2(top_team,bottom_team):
 				team1.add_player(inspect_block_bottom.slot2)
 			else:
 				team1.add_player(inspect_block_bottom.slot1)
+	for block in mixing_pot:
+		if (block.member_count == 2):
+			team2.add_player(inspect_block_top.slot1)
+			team2.add_player(inspect_block_top.slot2)
+		else:
+			team2.add_player(inspect_block_top.slot1)
+			
+	return[team1.get_average_elo()-team2.get_average_elo(),team1,team2]
 
 
 
