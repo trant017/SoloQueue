@@ -75,7 +75,7 @@ class Block(object):
 
 			
 	def __repr__(self):
-		return "Block()"
+		return "Block("+str(self.member_count())+ ","+str(self.get_average_elo()) +")"
 
 	def __str__(self):
 		print ("------------------------------------------------------")
@@ -244,44 +244,146 @@ def create_teams(players):
 				"Islington5","Dixon5","Kipling5","Islington6","Dixon6","Kipling6"
 				,"Islington7","Dixon7","Kipling7","Islington8","Dixon8","Kipling8",
 				"Islington9","Dixon9","Kipling9","Islington10","Dixon10","Kipling10"]
-	top = 1
-	no_room = False
+	mixer = []
+	while(len(local_list) != 0):
+		current_player = local_list.pop()
+		newBlock = Block()
+		newBlock.slot1 = current_player
+		newBlock.name = ""+current_player.ign
+		if (current_player.duo):
+			newBlock.slot2 = current_player.duo
+			newBlock.name = newBlock.name+current_player.duo.ign
+			local_list=[x for x in local_list if x.ign.lower() != current_player.duo.ign.lower()]
+		mixer.append(newBlock)
+	mixer.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+	# print (mixer)
+	# test = []
+	# for block in mixer :
+	# 	test.append(block.slot1)
+	# 	if block.slot2 :
+	# 		test.append(block.slot2)
+
+	# print (len(test))
+
 	for z in range(0,int(number_of_teams)):
-		newTeam = Team(team_names.pop())
-		while (newTeam.member_count() != 5):
-			if (no_room == False):
-				if (top == 1):
-					index = 0
-				else:
-					index = -1
-			inspect_player = local_list[index]
-# 			print(inspect_player)
-			if(inspect_player.duo):
-				if (newTeam.member_count() > 3 ):
-					if (top ==1):
-						index = index + 1
-						no_room = True
-					else:
-						index = index - 1
-						no_room = True
-				else:
-					newTeam.add_player(inspect_player)
-					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.ign.lower()]
-					duo = duo[0]
-					newTeam.add_player(duo)
-					no_room = False
-					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
-					local_list=[x for x in local_list if x.ign.lower() != duo.ign.lower()]
-					top = top * -1
+		newTeam= Team(team_names.pop())
+		bottom_did_not_fit = False
+		top_did_not_fit = False
+		index_top = -1
+		index_bottom = 0
+		while(newTeam.member_count() != 5):
+			# print('------------------------------')
+			# print("Mixer Count:"+str(len(mixer)))
+			# print("Team Number Count:"+str(newTeam.member_count()))
+
+			# finding top and bottom
+			if (len(mixer)<2):
+				inspect_block_top = mixer[0]
+				inspect_block_bottom = inspect_block_top
+				mixer=[x for x in mixer if x.name.lower() != inspect_block_bottom.name.lower()]
 			else:
-				newTeam.add_player(inspect_player)
-				no_room = False
-				local_list=[x for 
-				x in local_list if x.ign.lower() != inspect_player.ign.lower()]
-				top = top * -1
-				
+				inspect_block_top = mixer[index_top]
+				mixer=[x for x in mixer if x.name.lower() != inspect_block_top.name.lower()]
+				inspect_block_bottom = mixer[index_bottom]
+				mixer=[x for x in mixer if x.name.lower() != inspect_block_bottom.name.lower()]
+
+
+			# print ("Being Inspected")
+			# print(5-newTeam.member_count(),inspect_block_top.member_count())
+			# print(inspect_block_top)
+			# print('------------------------------')
+
+			# top add
+			if (bottom_did_not_fit == False):
+				if((5-newTeam.member_count())>=inspect_block_top.member_count()):
+					if (inspect_block_top.member_count()==2):
+						# print("running2")
+						newTeam.add_player(inspect_block_top.slot1)
+						newTeam.add_player(inspect_block_top.slot2)
+						Top_did_not_fit = False
+						index_top = -1
+					else:
+						# print("running1")
+						newTeam.add_player(inspect_block_top.slot1)
+						Top_did_not_fit = False
+						index_top = -1
+				else:
+					top_did_not_fit = True
+					index_top = index_top - 1
+					mixer.append(inspect_block_top)
+					mixer.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+			else:
+				mixer.append(inspect_block_top)
+				mixer.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+
+			# print(5-newTeam.member_count(),inspect_block_bottom.member_count())
+			# print(inspect_block_bottom)
+
+			# bottom add
+			if (top_did_not_fit == False):
+				if((5-newTeam.member_count())>=inspect_block_bottom.member_count()):
+					if (inspect_block_bottom.member_count()==2):
+						# print("running2")
+						newTeam.add_player(inspect_block_bottom.slot1)
+						newTeam.add_player(inspect_block_bottom.slot2)
+						bottom_did_not_fit = False
+						index_bottom = 0
+					else:
+						# print("running1")
+						newTeam.add_player(inspect_block_bottom.slot1)
+						bottom_did_not_fit = False
+						index_bottom = 0
+				else:
+					bottom_did_not_fit = True
+					index_bottom = index_bottom + 1
+					mixer.append(inspect_block_bottom)
+					mixer.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+			else:
+				mixer.append(inspect_block_bottom)
+				mixer.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
+
 		team_list.append(newTeam)
 	return team_list
+
+	# top = 1
+	# no_room = False
+# 	for z in range(0,int(number_of_teams)):
+# 		newTeam = Team(team_names.pop())
+# 		while (newTeam.member_count() != 5):
+# 			if (no_room == False):
+# 				if (top == 1):
+# 					index = 0
+# 				else:
+# 					index = -1
+# 			inspect_player = local_list[index]
+# # 			print(inspect_player)
+# 			if(inspect_player.duo):
+# 				if (newTeam.member_count() > 3 ):
+# 					if (top ==1):
+# 						index = index + 1
+# 						no_room = True
+# 					else:
+# 						index = index - 1
+# 						no_room = True
+# 				else:
+# 					newTeam.add_player(inspect_player)
+# 					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.ign.lower()]
+# 					duo = duo[0]
+# 					newTeam.add_player(duo)
+# 					no_room = False
+# 					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
+# 					local_list=[x for x in local_list if x.ign.lower() != duo.ign.lower()]
+# 					top = top * -1
+# 			else:
+# 				newTeam.add_player(inspect_player)
+# 				no_room = False
+# 				local_list=[x for 
+# 				x in local_list if x.ign.lower() != inspect_player.ign.lower()]
+# 				top = top * -1
+
+				
+	# 	team_list.append(newTeam)
+	# return team_list
 
 def balance_algorithm_1(top_team,bottom_team):
 	top_Block = top_team.blockify()
@@ -373,7 +475,7 @@ def balance_algorithm_2(top_team,bottom_team):
 		mixing_pot=[x for x in mixing_pot if x.name.lower() != inspect_block_bottom.name.lower()]
 
 		if((5-team1.member_count())>inspect_block_top.member_count()):
-			if (inspect_block_top.member_count==2):
+			if (inspect_block_top.member_count()==2):
 				team1.add_player(inspect_block_top.slot1)
 				team1.add_player(inspect_block_top.slot2)
 				Top_did_not_fit = False
@@ -386,7 +488,7 @@ def balance_algorithm_2(top_team,bottom_team):
 			mixing_pot.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
 
 		if((5-team1.member_count())>inspect_block_bottom.member_count()):
-			if (inspect_block_top.member_count==2):
+			if (inspect_block_bottom.member_count()==2):
 				team1.add_player(inspect_block_bottom.slot1)
 				team1.add_player(inspect_block_bottom.slot2)
 				bottom_did_not_fit = False
@@ -428,6 +530,7 @@ def stage2_teambalance(team_list):
 		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
 		if (difference > 300) :
+			print("running")
 			local_list=[x for x in local_list if x.name.lower() != top_team.name.lower()]
 			local_list=[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 			score1 = balance_algorithm_1(top_team, bottom_team)
