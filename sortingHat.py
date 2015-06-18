@@ -187,7 +187,6 @@ class Team(object):
 				count = count + 2
 			else:
 				doNothing=True
-
 		else:
 			newBlock = Block()
 			newBlock.add_player(self.slot3)
@@ -202,7 +201,6 @@ class Team(object):
 				count = count + 2
 			else:
 				doNothing=True
-
 		else:
 			newBlock = Block()
 			newBlock.add_player(self.slot4)
@@ -213,7 +211,6 @@ class Team(object):
 			newBlock.add_player(self.slot5)
 			blocks.append(newBlock)
 			count = count + 1
-
 		return blocks
 			
 	def __repr__(self):
@@ -269,18 +266,15 @@ def create_teams(players):
 						no_room = True
 				else:
 					newTeam.add_player(inspect_player)
-					printPlayer(inspect_player)
 					duo=[x for x in local_list if x.ign.lower() == inspect_player.duo.ign.lower()]
 					duo = duo[0]
 					newTeam.add_player(duo)
-					printPlayer(duo)
 					no_room = False
 					local_list=[x for x in local_list if x.ign.lower() != inspect_player.ign.lower()]
 					local_list=[x for x in local_list if x.ign.lower() != duo.ign.lower()]
 					top = top * -1
 			else:
 				newTeam.add_player(inspect_player)
-				printPlayer(inspect_player)
 				no_room = False
 				local_list=[x for 
 				x in local_list if x.ign.lower() != inspect_player.ign.lower()]
@@ -297,7 +291,6 @@ def balance_algorithm_1(top_team,bottom_team):
 	team1 = Team(top_team.name)
 	team2 = Team(bottom_team.name)
 	stage = 0
-	# import pdb; pdb.set_trace()
 	while(len(mixing_pot)>0):
 		inspect_block = mixing_pot.pop()
 		if (stage == 0):
@@ -360,14 +353,16 @@ def balance_algorithm_1(top_team,bottom_team):
 			print("could not handle team creation")
 			print(inspect_block)
 			break
-	return [team1.get_average_elo()-team2.get_average_elo(),team1,team2]
-
-	print (top_team)
-	for block in top_Block:
-		print (block)
-	print (bottom_team)
-	for block2 in bottom_Block:
-		print (block2)
+	print(top_team)
+	print("turns into")
+	print(team1)
+	print(bottom_team)
+	print("turns into")
+	print(team2)
+	if(team1.member_count()==5 & team2.member_count()==5):
+		return [team1.get_average_elo()-team2.get_average_elo(),team1,team2]
+	else:
+		return [top_team.get_average_elo()-bottom_team.get_average_elo(),top_team,bottom_team]
 
 def balance_algorithm_2(top_team,bottom_team):
 	top_Block = top_team.blockify()
