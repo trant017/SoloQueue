@@ -457,6 +457,7 @@ def balance_algorithm_1(top_team,bottom_team):
 			break
 
 	if (team1.member_count() == 5):
+		# print("running 5 1")
 		inspect_block = mixing_pot.pop()
 		if (inspect_block.member_count() == 2):
 			team2.add_player(inspect_block.slot1)
@@ -470,8 +471,8 @@ def balance_algorithm_1(top_team,bottom_team):
 			team2.add_player(inspect_block.slot2)
 		else:
 			team2.add_player(inspect_block.slot1)
-
-	if (team2.member_count() == 5):
+	elif (team2.member_count() == 5):
+		# print("running 5 2")
 		inspect_block = mixing_pot.pop()
 		if (inspect_block.member_count() == 2):
 			team1.add_player(inspect_block.slot1)
@@ -485,46 +486,52 @@ def balance_algorithm_1(top_team,bottom_team):
 			team1.add_player(inspect_block.slot2)
 		else:
 			team1.add_player(inspect_block.slot1)
+	else:
+		donnothing=True
 
 	if (team1.member_count() == 4):
-
+		# print("running 4")
 		inspect_block = mixing_pot.pop()
-		if (inspect_block.member_count() == 2):
-			team2.add_player(inspect_block.slot1)
-			team2.add_player(inspect_block.slot2)
-		else:
+		inspect_block2 = mixing_pot.pop()
+
+		if (inspect_block.member_count() == 1):
 			team1.add_player(inspect_block.slot1)
-
-		inspect_block = mixing_pot.pop()
-		if (inspect_block.member_count() == 2):
-			team2.add_player(inspect_block.slot1)
-			team2.add_player(inspect_block.slot2)
+			team2.add_player(inspect_block2.slot1)
+			if (inspect_block2.member_count() == 2):
+				team2.add_player(inspect_block2.slot2)
 		else:
-			team1.add_player(inspect_block.slot1)		
-
-	if (team2.member_count() == 4):
-
-		inspect_block = mixing_pot.pop()
-		if (inspect_block.member_count() == 2):
-			team1.add_player(inspect_block.slot1)
-			team1.add_player(inspect_block.slot2)
-		else:
+			team1.add_player(inspect_block2.slot1)
 			team2.add_player(inspect_block.slot1)
+			if (inspect_block.member_count() == 2):
+				team2.add_player(inspect_block.slot2)
 
+
+	if (team1.member_count() == 3):
+		# print("running 3")
 		inspect_block = mixing_pot.pop()
+		inspect_block2 = mixing_pot.pop()
+
 		if (inspect_block.member_count() == 2):
 			team1.add_player(inspect_block.slot1)
 			team1.add_player(inspect_block.slot2)
+			team2.add_player(inspect_block2.slot1)
+			if (inspect_block2.member_count() == 2):
+				team2.add_player(inspect_block2.slot2)
 		else:
-			team2.add_player(inspect_block.slot1)	
-
+			team1.add_player(inspect_block2.slot1)
+			team1.add_player(inspect_block2.slot2)
+			team2.add_player(inspect_block.slot1)
+			if (inspect_block.member_count() == 2):
+				team2.add_player(inspect_block.slot2)
 
 	if(team1.member_count()==5 & team2.member_count()==5):
-		print("could handle team creation")
+		# print("could handle team creation")
 		return [abs(team1.get_average_elo()-team2.get_average_elo()),team1,team2]
 	else:
 		print(team1)
+		# print(top_team)
 		print(team2)
+		# print(bottom_team)
 		return [abs(top_team.get_average_elo()-bottom_team.get_average_elo()),top_team,bottom_team]
 
 def balance_algorithm_2(top_team,bottom_team):
@@ -656,7 +663,7 @@ sum = 0
 list_of_elo = []
 team_list.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
 for team in team_list:
-	# print (team)
+	print (team)
 	sum = sum + int(team.get_average_elo())
 	list_of_elo.append(int(team.get_average_elo()))
 	
@@ -664,4 +671,3 @@ avg = sum/number_of_teams
 print ("Average:"+str(avg))
 std = stdev(list_of_elo)
 print ("STD:"+str(std))
-
