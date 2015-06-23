@@ -526,13 +526,13 @@ def balance_algorithm_1(top_team,bottom_team):
 
 	if(team1.member_count()==5 & team2.member_count()==5):
 		# print("could handle team creation")
-		return [abs(team1.get_average_elo()-team2.get_average_elo()),team1,team2]
+		return [abs(team1.get_average_elo()-team2.get_average_elo()),team1,team2, 'balance 1 succesful']
 	else:
 		print(team1)
 		# print(top_team)
 		print(team2)
 		# print(bottom_team)
-		return [abs(top_team.get_average_elo()-bottom_team.get_average_elo()),top_team,bottom_team]
+		return [abs(top_team.get_average_elo()-bottom_team.get_average_elo()),top_team,bottom_team,' balance 1 failed']
 
 def balance_algorithm_2(top_team,bottom_team):
 	top_Block = top_team.blockify()
@@ -548,20 +548,20 @@ def balance_algorithm_2(top_team,bottom_team):
 		inspect_block_bottom = mixing_pot[0]
 		mixing_pot=[x for x in mixing_pot if x.name.lower() != inspect_block_bottom.name.lower()]
 
-		if((5-team1.member_count())>inspect_block_top.member_count()):
+		if((5-team1.member_count())>=inspect_block_top.member_count()):
 			if (inspect_block_top.member_count()==2):
 				team1.add_player(inspect_block_top.slot1)
 				team1.add_player(inspect_block_top.slot2)
-				Top_did_not_fit = False
+				top_did_not_fit = False
 			else:
 				team1.add_player(inspect_block_top.slot1)
-				Top_did_not_fit = False
+				top_did_not_fit = False
 		else:
 			top_did_not_fit = True
 			mixing_pot.append(inspect_block_top)
 			mixing_pot.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
 
-		if((5-team1.member_count())>inspect_block_bottom.member_count()):
+		if((5-team1.member_count())>=inspect_block_bottom.member_count()):
 			if (inspect_block_bottom.member_count()==2):
 				team1.add_player(inspect_block_bottom.slot1)
 				team1.add_player(inspect_block_bottom.slot2)
@@ -575,18 +575,16 @@ def balance_algorithm_2(top_team,bottom_team):
 			mixing_pot.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
 
 		if (top_did_not_fit == True & bottom_did_not_fit == True):
-			return [abs(top_team.get_average_elo()-bottom_team.get_average_elo()),top_team,bottom_team]
-
-
+			return [abs(top_team.get_average_elo()-bottom_team.get_average_elo()),top_team,bottom_team, 'balance 2 failed']
 
 	for block in mixing_pot:
-		if (block.member_count == 2):
-			team2.add_player(inspect_block_top.slot1)
-			team2.add_player(inspect_block_top.slot2)
+		if (block.member_count() == 2):
+			team2.add_player(block.slot1)
+			team2.add_player(block.slot2)
 		else:
-			team2.add_player(inspect_block_top.slot1)
+			team2.add_player(block.slot1)
 			
-	return[abs(team1.get_average_elo()-team2.get_average_elo()),team1,team2]
+	return[abs(team1.get_average_elo()-team2.get_average_elo()),team1,team2,'balance 2 succesful']
 
 
 
@@ -600,6 +598,8 @@ def stage2_teambalance(team_list):
 		local_list.sort(key=lambda x: int(x.get_average_elo()), reverse=False)
 		top_team = local_list[-1]
 		bottom_team = local_list[0]
+		# print(top_team)
+		# print(bottom_team)
 		[x for x in local_list if x.name.lower() != top_team.name.lower()]
 		[x for x in local_list if x.name.lower() != bottom_team.name.lower()]
 		difference = top_team.get_average_elo() - bottom_team.get_average_elo()
@@ -613,7 +613,10 @@ def stage2_teambalance(team_list):
 			scores.append(score2)
 			scores.sort(key=lambda x: int(x[0]), reverse=False)
 			chosen = scores[0]
-			# print (scores)
+			test = scores[1]
+			# print (chosen)
+			# print (test[1])
+			# print (test[2])
 			local_list.append(chosen[1])
 			local_list.append(chosen[2])
 			count = count + 1
