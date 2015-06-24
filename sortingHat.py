@@ -49,10 +49,16 @@ class Block(object):
 		if (self.slot2):
 			total = total+int(self.slot2.elo)
 			count = count+1
-
 		average = total/count
-
 		return average
+
+	def get_sum_elo(self):
+		total=0
+		if (self.slot1):
+			total = total+int(self.slot1.elo)
+		if (self.slot2):
+			total = total+int(self.slot2.elo)
+		return total
 
 	def member_count(self):
 		count=0
@@ -149,6 +155,11 @@ class Team(object):
 				self.slot2 = player
 		else:
 			self.slot1 = player
+
+	def add_block(self,block):
+		self.add_player(block.slot1)
+		if (block.member_count() == 2):
+			self.add_player(block.slot2)
 
 	def blockify(self):
 		blocks = []
@@ -298,13 +309,12 @@ def create_teams(players):
 				if((5-newTeam.member_count())>=inspect_block_top.member_count()):
 					if (inspect_block_top.member_count()==2):
 						# print("running2")
-						newTeam.add_player(inspect_block_top.slot1)
-						newTeam.add_player(inspect_block_top.slot2)
+						newTeam.add_block(inspect_block_top)
 						Top_did_not_fit = False
 						index_top = -1
 					else:
 						# print("running1")
-						newTeam.add_player(inspect_block_top.slot1)
+						newTeam.add_block(inspect_block_top)
 						Top_did_not_fit = False
 						index_top = -1
 				else:
@@ -324,13 +334,12 @@ def create_teams(players):
 				if((5-newTeam.member_count())>=inspect_block_bottom.member_count()):
 					if (inspect_block_bottom.member_count()==2):
 						# print("running2")
-						newTeam.add_player(inspect_block_bottom.slot1)
-						newTeam.add_player(inspect_block_bottom.slot2)
+						newTeam.add_block(inspect_block_bottom)
 						bottom_did_not_fit = False
 						index_bottom = 0
 					else:
 						# print("running1")
-						newTeam.add_player(inspect_block_bottom.slot1)
+						newTeam.add_block(inspect_block_bottom)
 						bottom_did_not_fit = False
 						index_bottom = 0
 				else:
@@ -397,59 +406,52 @@ def balance_algorithm_1(top_team,bottom_team):
 		inspect_block = mixing_pot.pop()
 		if (stage == 0):
 			if (inspect_block.member_count() == 2):
-				team1.add_player(inspect_block.slot1)
-				team1.add_player(inspect_block.slot2)
+				team1.add_block(inspect_block)
 				stage = -3
 			else:
-				team1.add_player(inspect_block.slot1)
+				team1.add_block(inspect_block)
 				stage = -2
 		elif (stage == -3):
 			if (inspect_block.member_count() == 2):
-				team2.add_player(inspect_block.slot1)
-				team2.add_player(inspect_block.slot2)
+				team2.add_block(inspect_block)
 				stage = -1
 			else:
-				team2.add_player(inspect_block.slot1)
+				team2.add_block(inspect_block)
 				stage = -2
 		elif (stage == -2 ):
 			if (inspect_block.member_count() == 2):
-				team2.add_player(inspect_block.slot1)
-				team2.add_player(inspect_block.slot2)
+				team2.add_block(inspect_block)
 				stage = 2
 			else:
-				team2.add_player(inspect_block.slot1)
+				team2.add_block(inspect_block)
 				stage = -1
 		elif (stage == -1):
 			if (inspect_block.member_count() == 2):
-				team2.add_player(inspect_block.slot1)
-				team2.add_player(inspect_block.slot2)
+				team2.add_block(inspect_block)
 				stage = 3
 			else:
-				team2.add_player(inspect_block.slot1)
+				team2.add_block(inspect_block)
 				stage = 2
 		elif (stage == 3):
 			if (inspect_block.member_count() == 2):
-				team1.add_player(inspect_block.slot1)
-				team1.add_player(inspect_block.slot2)
+				team1.add_block(inspect_block)
 				stage = 1
 			else:
-				team1.add_player(inspect_block.slot1)
+				team1.add_block(inspect_block)
 				stage = 2
 		elif (stage == 2):
 			if (inspect_block.member_count() == 2):
-				team1.add_player(inspect_block.slot1)
-				team1.add_player(inspect_block.slot2)
+				team1.add_block(inspect_block)
 				stage = -2
 			else:
-				team1.add_player(inspect_block.slot1)
+				team1.add_block(inspect_block)
 				stage = 1
 		elif (stage == 1):
 			if (inspect_block.member_count() ==2):
-				team1.add_player(inspect_block.slot1)
-				team1.add_player(inspect_block.slot2)
+				team1.add_block(inspect_block)
 				stage = -3
 			else:
-				team1.add_player(inspect_block.slot1)
+				team1.add_block(inspect_block)
 				stage = -2
 		else:
 			print("could not handle team creation")
@@ -585,6 +587,15 @@ def balance_algorithm_2(top_team,bottom_team):
 			team2.add_player(block.slot1)
 			
 	return[abs(team1.get_average_elo()-team2.get_average_elo()),team1,team2,'balance 2 succesful']
+
+def balance_algorithm_3(top_team,bottom_team):
+	top_Block = top_team.blockify()
+	bottom_Block = bottom_team.blockify()
+	mixing_pot.sort(key=lambda x: int(x.get_sum_elo()), reverse=False)
+	team1 = Team(top_team.name)
+	team2 = Team(bottom_team.name)
+	while (team1.member_count_()!=5):
+		donodhitn=4
 
 
 
